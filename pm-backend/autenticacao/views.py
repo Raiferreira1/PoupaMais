@@ -24,7 +24,7 @@ def cadastrar_usuario(request):
 
     # Criando o usuário
     username = email  # Usando o e-mail como nome de usuário
-    user = User.objects.create_user(username=username, email=email, password=senha)
+    user = User.objects.create_user(username=email, email=email, password=senha)
     user.first_name = nome
     user.save()
 

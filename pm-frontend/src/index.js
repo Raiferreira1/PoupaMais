@@ -1,14 +1,15 @@
 // src/index.js
-import React from "react";
-import ReactDOM from "react-dom/client"; // Alterar a importação para 'react-dom/client'
-import App from "./App";
-import './index.css'; // Certifique-se de que está importando o arquivo CSS
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+import { BrowserRouter } from 'react-router-dom';
 
-
-// Usar createRoot em vez de render
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
