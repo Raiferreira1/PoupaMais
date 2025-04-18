@@ -1,2 +1,4 @@
 venv/
 git init
+__pycache__/
+*.pyc
