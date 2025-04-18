@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
-    nome = models.CharField(max_length=255)
+    name= models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(unique=True)
     
     # Caso queira personalizar o comportamento do campo senha, como requisitos adicionais

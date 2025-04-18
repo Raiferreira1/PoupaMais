@@ -1,12 +1,16 @@
 // src/views/Register.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Register() {
   const [formData, setFormData] = useState({
-    name: "", email: "", password: "", confirmPassword: ""
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
   });
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,41 +19,67 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("FormData antes do envio:", formData);
+
+    // Validações
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setSuccess(false);
       return setMessage("Preencha todos os campos.");
     }
-
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(formData.email)) {
       setSuccess(false);
       return setMessage("E-mail inválido.");
     }
-
     if (formData.password !== formData.confirmPassword) {
       setSuccess(false);
       return setMessage("As senhas não coincidem.");
     }
 
+    setLoading(true);
+    setMessage(null);
+
+    // prepare body com as chaves que o backend espera
+    const body = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password
+    };
+    console.log("Body enviado ao backend:", body);
+
     try {
-      const res = await fetch("http://localhost:8000/api/register/", {
+      const res = await fetch("http://127.0.0.1:8000/api/register/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        })
+        body: JSON.stringify(body)
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erro no cadastro");
 
-      setSuccess(true);
-      setMessage("Usuário cadastrado com sucesso!");
+      if (!res.ok) {
+        // se for e-mail duplicado, vai ter data.erro === 'E-mail já cadastrado.'
+        if (data.erro) {
+          setMessage(data.erro);
+        } else {
+          setMessage("Erro no cadastro.");
+        }
+        setSuccess(false);
+      } else {
+        setSuccess(true);
+        setMessage("Usuário cadastrado com sucesso!");
+        // limpa o formulário após 2s
+        setTimeout(() => {
+          setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+          setMessage(null);
+          setSuccess(false);
+        }, 2000);
+      }
     } catch (err) {
+      console.error("Erro na requisição:", err);
       setSuccess(false);
-      setMessage(err.message);
+      setMessage("Erro de rede, tente novamente.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,9 +125,17 @@ function Register() {
 
       <button
         type="submit"
-        className="w-full py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+        disabled={loading || success}
+        className={`w-full py-2 font-semibold rounded-md transition 
+          ${loading || success
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 text-white"}`}
       >
-        Cadastrar
+        {loading
+          ? "Cadastrando..."
+          : success
+            ? "Cadastrado!"
+            : "Cadastrar"}
       </button>
 
       {message && (

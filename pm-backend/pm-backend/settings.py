@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "autenticacao",
     "rest_framework",
 ]
@@ -51,8 +52,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
+    'corsheaders.middleware.CorsMiddleware',
 
+]
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = "pm-backend.urls"
 
 TEMPLATES = [
@@ -70,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "pm_backend.wsgi.application"
+WSGI_APPLICATION = "pm-backend.wsgi.application"
 
 
 # Database
