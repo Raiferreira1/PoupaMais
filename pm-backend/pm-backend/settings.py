@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     "autenticacao",
     "rest_framework",
     'rest_framework_simplejwt',
+    "app_transacoes",
+    "app_categorias",
 ]
 
 # REST Framework settings
