@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
@@ -30,6 +31,6 @@ def cadastrar_usuario(request):
 
     return Response({'mensagem': 'Usuário criado com sucesso!'}, status=status.HTTP_201_CREATED)
 
-
+#@login_required
 def home(request):
     return JsonResponse({"mensagem": "Bem-vindo ao PoupaMais!"})
