@@ -1,9 +1,8 @@
-// src/views/home.jsx
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-green-100 p-4">
