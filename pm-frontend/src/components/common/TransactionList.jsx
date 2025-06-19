@@ -63,17 +63,16 @@ const TransactionList = ({ transactions, categories, onEdit, onDelete }) => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {transactions.map((transaction) => {
-            const categoryType = getCategoryType(transaction.category);
-            const categoryColor = getCategoryColor(transaction.category);
-            const isIncome = categoryType === 'income';
+            const categoryColor = getCategoryColor(transaction.categoria);
+            const isIncome = Number(transaction.valor) > 0;
             
             return (
               <tr key={transaction.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(transaction.date)}
+                  {formatDate(transaction.data)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {transaction.description}
+                  {transaction.titulo}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <span 
@@ -83,11 +82,11 @@ const TransactionList = ({ transactions, categories, onEdit, onDelete }) => {
                       color: categoryColor
                     }}
                   >
-                    {getCategoryName(transaction.category)}
+                    {getCategoryName(transaction.categoria)}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium" style={{ color: isIncome ? COLORS.success.DEFAULT : COLORS.danger.DEFAULT }}>
-                  {formatCurrency(transaction.amount)}
+                  {formatCurrency(Number(transaction.valor))}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
@@ -97,7 +96,7 @@ const TransactionList = ({ transactions, categories, onEdit, onDelete }) => {
                     ✏️
                   </button>
                   <button
-                    onClick={() => onDelete(transaction.id)}
+                    onClick={() => onDelete(transaction)}
                     className="text-red-600 hover:text-red-900"
                   >
                     🗑️

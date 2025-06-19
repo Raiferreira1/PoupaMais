@@ -22,7 +22,8 @@ const Transacoes = () => {
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
-    type: ''
+    type: '',
+    categoryId: ''
   });
 
   const handleFilterChange = (newFilters) => {
@@ -73,7 +74,7 @@ const Transacoes = () => {
   };
 
   const filteredTransactions = transactions.filter(transaction => {
-    const transactionDate = new Date(transaction.date);
+    const transactionDate = new Date(transaction.data);
     const startDate = filters.startDate ? new Date(filters.startDate) : null;
     const endDate = filters.endDate ? new Date(filters.endDate) : null;
     
@@ -81,24 +82,26 @@ const Transacoes = () => {
                        (!endDate || transactionDate <= endDate);
     
     const matchesType = !filters.type || 
-                       (filters.type === 'income' && transaction.amount > 0) ||
-                       (filters.type === 'expense' && transaction.amount < 0);
+                       (filters.type === 'income' && Number(transaction.valor) > 0) ||
+                       (filters.type === 'expense' && Number(transaction.valor) < 0);
     
-    return matchesDate && matchesType;
+    const matchesCategory = !filters.categoryId || String(transaction.categoria) === String(filters.categoryId);
+    
+    return matchesDate && matchesType && matchesCategory;
   });
 
   const totalIncome = filteredTransactions
-    .filter(t => t.amount > 0)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter(t => Number(t.valor) > 0)
+    .reduce((sum, t) => sum + Number(t.valor), 0);
 
   const totalExpense = filteredTransactions
-    .filter(t => t.amount < 0)
-    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    .filter(t => Number(t.valor) < 0)
+    .reduce((sum, t) => sum + Math.abs(Number(t.valor)), 0);
 
   const balance = totalIncome - totalExpense;
 
   if (loading) return <div>Carregando...</div>;
-  if (error) return <div>Erro: {error.message}</div>;
+    if (error) return <div>Erro: {error.message}</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -144,7 +147,7 @@ const Transacoes = () => {
               </div>
                 </div>
 
-      <TransactionFilter filters={filters} onFilterChange={handleFilterChange} />
+      <TransactionFilter filters={filters} onFilterChange={handleFilterChange} categories={categories} />
       
       <TransactionList
         transactions={filteredTransactions}
