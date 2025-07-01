@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Input from '../common/Input';
-import { COLORS } from '../../utils/colors';
 import '../../styles/buttons.css';
 
+// Formulário para criar ou editar uma categoria
 const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
+  // Estado do formulário
   const [formData, setFormData] = useState({
     name: '',
     type: 'expense',
     color: '#000000'
   });
 
+  // Preenche o formulário ao editar uma categoria existente
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -21,6 +22,7 @@ const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
     }
   }, [initialData]);
 
+  // Atualiza os campos do formulário
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -29,6 +31,7 @@ const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
     }));
   };
 
+  // Envia o formulário para o callback do pai
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
@@ -36,6 +39,7 @@ const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Campo nome */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
           Nome
@@ -50,7 +54,7 @@ const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         />
       </div>
-
+      {/* Campo tipo */}
       <div>
         <label htmlFor="type" className="block text-sm font-medium text-gray-700">
           Tipo
@@ -63,11 +67,11 @@ const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
           required
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         >
-          <option value="income" style={{ color: COLORS.success.DEFAULT }}>Receita</option>
-          <option value="expense" style={{ color: COLORS.danger.DEFAULT }}>Despesa</option>
+          <option value="income">Receita</option>
+          <option value="expense">Despesa</option>
         </select>
       </div>
-
+      {/* Campo cor */}
       <div>
         <label htmlFor="color" className="block text-sm font-medium text-gray-700">
           Cor
@@ -90,10 +94,11 @@ const CategoryForm = ({ onSubmit, initialData = {}, loading = false }) => {
           />
         </div>
       </div>
-
+      {/* Botão de envio */}
       <button
         type="submit"
         className="category-submit-button"
+        disabled={loading}
       >
         {initialData ? 'Atualizar' : 'Criar'}
       </button>

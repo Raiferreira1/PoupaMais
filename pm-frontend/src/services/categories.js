@@ -1,5 +1,7 @@
+// Serviço para operações de categorias (CRUD) com o backend
 const API_URL = 'http://127.0.0.1:8000/api';
 
+// Gera headers de autenticação para requisições
 const getHeaders = () => {
   const token = localStorage.getItem('access_token');
   if (!token) {
@@ -12,6 +14,7 @@ const getHeaders = () => {
 };
 
 const categoryService = {
+  // Busca todas as categorias
   getCategories: async () => {
     try {
       console.log('Fetching categories...');
@@ -63,6 +66,7 @@ const categoryService = {
     }
   },
 
+  // Cria uma nova categoria
   createCategory: async (categoryData) => {
     try {
       console.log('Creating category with data:', categoryData);
@@ -100,6 +104,7 @@ const categoryService = {
     }
   },
 
+  // Atualiza uma categoria existente
   updateCategory: async (id, categoryData) => {
     try {
       console.log('Updating category:', id, categoryData);
@@ -137,6 +142,7 @@ const categoryService = {
     }
   },
 
+  // Remove uma categoria
   deleteCategory: async (id) => {
     try {
       console.log('Deleting category:', id);

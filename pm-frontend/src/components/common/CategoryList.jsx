@@ -1,4 +1,3 @@
-import React from 'react';
 import { COLORS } from '../../utils/colors';
 
 const CategoryList = ({ categories, onEdit, onDelete }) => {
@@ -7,18 +6,10 @@ const CategoryList = ({ categories, onEdit, onDelete }) => {
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Nome
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Tipo
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Cor
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ações
-            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cor</th>
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -30,9 +21,7 @@ const CategoryList = ({ categories, onEdit, onDelete }) => {
                     className="h-4 w-4 rounded-full mr-2"
                     style={{ backgroundColor: category.color }}
                   />
-                  <div className="text-sm font-medium text-gray-900">
-                    {category.name}
-                  </div>
+                  <div className="text-sm font-medium text-gray-900">{category.name}</div>
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
@@ -44,7 +33,7 @@ const CategoryList = ({ categories, onEdit, onDelete }) => {
                   }`}
                   style={{
                     backgroundColor: category.type === 'income' ? COLORS.success.LIGHT : COLORS.danger.LIGHT,
-                    color: category.type === 'income' ? COLORS.success.DEFAULT : COLORS.danger.DEFAULT
+                    color: category.type === 'income' ? COLORS.success.DEFAULT : COLORS.danger.DEFAULT,
                   }}
                 >
                   {category.type === 'income' ? 'Receita' : 'Despesa'}
@@ -56,9 +45,7 @@ const CategoryList = ({ categories, onEdit, onDelete }) => {
                     className="h-6 w-6 rounded-full border border-gray-300"
                     style={{ backgroundColor: category.color }}
                   />
-                  <span className="ml-2 text-sm text-gray-500">
-                    {category.color}
-                  </span>
+                  <span className="ml-2 text-sm text-gray-500">{category.color}</span>
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

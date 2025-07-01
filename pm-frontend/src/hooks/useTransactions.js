@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import transactionService from '../services/transactions';
 
+// Hook customizado para gerenciar transações financeiras
 const useTransactions = () => {
+  // Estado das transações, carregamento e erro
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Busca todas as transações do backend
   const fetchTransactions = useCallback(async () => {
     try {
       console.log('Fetching transactions in useTransactions hook...');
@@ -31,11 +34,13 @@ const useTransactions = () => {
     }
   }, []);
 
+  // Busca as transações ao montar o componente
   useEffect(() => {
     console.log('useTransactions effect running...'); // Debug log
     fetchTransactions();
   }, [fetchTransactions]);
 
+  // Cria uma nova transação
   const createTransaction = useCallback(async (transactionData) => {
     try {
       console.log('Creating transaction in useTransactions hook:', transactionData);
@@ -56,6 +61,7 @@ const useTransactions = () => {
     }
   }, []);
 
+  // Atualiza uma transação existente
   const updateTransaction = useCallback(async (id, transactionData) => {
     try {
       console.log('Updating transaction in useTransactions hook:', id, transactionData);
@@ -76,6 +82,7 @@ const useTransactions = () => {
     }
   }, []);
 
+  // Remove uma transação
   const deleteTransaction = useCallback(async (id) => {
     try {
       console.log('Deleting transaction in useTransactions hook:', id);
@@ -95,6 +102,7 @@ const useTransactions = () => {
     }
   }, []);
 
+  // Retorna o estado e as funções do hook
   return {
     transactions,
     loading,

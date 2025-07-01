@@ -1,11 +1,13 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
+// Layout principal do dashboard, com navbar e área de conteúdo
 const DashboardLayout = ({ children }) => {
+  // Obtém funções e dados do contexto de autenticação
   const { logout, user } = useAuth();
   const navigate = useNavigate();
 
+  // Função para logout e redirecionamento
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -13,16 +15,18 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
+      {/* Navbar superior */}
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
+              {/* Logo e nome do app */}
               <div className="flex-shrink-0 flex items-center">
                 <Link to="/home" className="text-xl font-bold text-green-600">
                   PoupaMais
                 </Link>
               </div>
+              {/* Links de navegação */}
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
                   to="/home"
@@ -44,6 +48,7 @@ const DashboardLayout = ({ children }) => {
                 </Link>
               </div>
             </div>
+            {/* Usuário logado e botão de sair */}
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
               <div className="ml-3 relative">
                 <div className="flex items-center space-x-4">
@@ -62,8 +67,7 @@ const DashboardLayout = ({ children }) => {
           </div>
         </div>
       </nav>
-
-      {/* Conteúdo principal */}
+      {/* Conteúdo principal do dashboard */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {children}
       </main>

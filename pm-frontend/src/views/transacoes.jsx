@@ -43,7 +43,6 @@ const Transacoes = () => {
       setIsModalOpen(false);
       setSelectedTransaction(null);
     } catch (error) {
-      console.error('Error submitting transaction:', error);
       setMessage(error.message || 'Erro ao salvar transação');
       setSuccess(false);
     }
@@ -62,7 +61,6 @@ const Transacoes = () => {
       setIsDeleteModalOpen(false);
       setSelectedTransaction(null);
     } catch (error) {
-      console.error('Error deleting transaction:', error);
       setMessage(error.message);
       setSuccess(false);
     }
@@ -77,16 +75,9 @@ const Transacoes = () => {
     const transactionDate = new Date(transaction.data);
     const startDate = filters.startDate ? new Date(filters.startDate) : null;
     const endDate = filters.endDate ? new Date(filters.endDate) : null;
-    
-    const matchesDate = (!startDate || transactionDate >= startDate) && 
-                       (!endDate || transactionDate <= endDate);
-    
-    const matchesType = !filters.type || 
-                       (filters.type === 'income' && Number(transaction.valor) > 0) ||
-                       (filters.type === 'expense' && Number(transaction.valor) < 0);
-    
+    const matchesDate = (!startDate || transactionDate >= startDate) && (!endDate || transactionDate <= endDate);
+    const matchesType = !filters.type || (filters.type === 'income' && Number(transaction.valor) > 0) || (filters.type === 'expense' && Number(transaction.valor) < 0);
     const matchesCategory = !filters.categoryId || String(transaction.categoria) === String(filters.categoryId);
-    
     return matchesDate && matchesType && matchesCategory;
   });
 
@@ -101,23 +92,22 @@ const Transacoes = () => {
   const balance = totalIncome - totalExpense;
 
   if (loading) return <div>Carregando...</div>;
-    if (error) return <div>Erro: {error.message}</div>;
+  if (error) return <div>Erro: {error.message}</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Transações</h1>
-          <button
+        <button
           onClick={() => {
             setSelectedTransaction(null);
             setIsModalOpen(true);
           }}
           className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            Nova Transação
-          </button>
-        </div>
-
+        >
+          Nova Transação
+        </button>
+      </div>
       {message && (
         <Alert
           message={message}
@@ -125,7 +115,6 @@ const Transacoes = () => {
           onClose={() => setMessage('')}
         />
       )}
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold text-gray-700">Receitas</h3>
@@ -144,18 +133,15 @@ const Transacoes = () => {
           <p className="text-2xl font-bold" style={{ color: balance >= 0 ? COLORS.success.DEFAULT : COLORS.danger.DEFAULT }}>
             {formatCurrency(balance)}
           </p>
-              </div>
-                </div>
-
+        </div>
+      </div>
       <TransactionFilter filters={filters} onFilterChange={handleFilterChange} categories={categories} />
-      
       <TransactionList
         transactions={filteredTransactions}
         categories={categories}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
       />
-
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -167,19 +153,18 @@ const Transacoes = () => {
               categories={categories}
               initialData={selectedTransaction}
             />
-                <button
+            <button
               onClick={() => {
                 setIsModalOpen(false);
                 setSelectedTransaction(null);
               }}
               className="mt-4 w-full px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  Cancelar
-                </button>
+            >
+              Cancelar
+            </button>
           </div>
         </div>
       )}
-
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => {

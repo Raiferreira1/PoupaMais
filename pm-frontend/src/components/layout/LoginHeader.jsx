@@ -1,9 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
+// Cabeçalho visual para telas de login e cadastro
 const LoginHeader = ({ title, subtitle }) => {
   return (
     <div className="text-center mb-8">
+      {/* Ícone ilustrativo */}
       <div className="inline-flex items-center justify-center p-3 bg-green-100 rounded-full mb-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -22,6 +23,7 @@ const LoginHeader = ({ title, subtitle }) => {
           <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
         </svg>
       </div>
+      {/* Título e subtítulo */}
       <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
       <p className="text-gray-600 mt-1">{subtitle}</p>
     </div>

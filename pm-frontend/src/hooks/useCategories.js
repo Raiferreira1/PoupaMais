@@ -1,11 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
 import categoryService from '../services/categories';
 
+// Hook customizado para gerenciar categorias financeiras
 const useCategories = () => {
+  // Estado das categorias, carregamento e erro
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Busca todas as categorias do backend
   const fetchCategories = useCallback(async () => {
     try {
       console.log('Fetching categories in useCategories hook...');
@@ -21,7 +24,7 @@ const useCategories = () => {
         throw new Error('Dados de categorias inválidos');
       }
       
-      // Formatar as categorias para garantir tipos consistentes
+      // Formata as categorias para garantir tipos consistentes
       const formattedCategories = data.map(category => ({
         ...category,
         type: category.type === 'receita' || category.type === 'income' ? 'income' : 'expense',
@@ -39,11 +42,12 @@ const useCategories = () => {
     }
   }, []);
 
-  // Carregar categorias ao montar o componente
+  // Carrega categorias ao montar o componente
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
+  // Cria uma nova categoria
   const createCategory = useCallback(async (categoryData) => {
     try {
       setLoading(true);
@@ -59,6 +63,7 @@ const useCategories = () => {
     }
   }, []);
 
+  // Atualiza uma categoria existente
   const updateCategory = useCallback(async (id, categoryData) => {
     try {
       setLoading(true);
@@ -74,6 +79,7 @@ const useCategories = () => {
     }
   }, []);
 
+  // Remove uma categoria
   const deleteCategory = useCallback(async (id) => {
     try {
       setLoading(true);
@@ -88,6 +94,7 @@ const useCategories = () => {
     }
   }, []);
 
+  // Retorna o estado e as funções do hook
   return {
     categories,
     loading,

@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { COLORS } from '../../utils/colors';
 
@@ -8,13 +7,13 @@ const Alert = ({ message, type = 'success', onClose }) => {
   const borderColor = type === 'success' ? COLORS.success.light : COLORS.danger.light;
 
   return (
-    <div 
-      className="px-4 py-3 rounded relative mb-4" 
+    <div
+      className="px-4 py-3 rounded relative mb-4"
       role="alert"
-      style={{ 
+      style={{
         backgroundColor: bgColor,
         border: `1px solid ${borderColor}`,
-        color: textColor
+        color: textColor,
       }}
     >
       <span className="block sm:inline">{message}</span>

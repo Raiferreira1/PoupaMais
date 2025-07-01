@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { COLORS } from '../../utils/colors';
@@ -24,19 +23,12 @@ const TransactionList = ({ transactions, categories, onEdit, onDelete }) => {
 
   const isIncomeCategory = (categoryId) => {
     if (!categoryId) return false;
-    
-    // Se categoryId for um objeto com name
     if (typeof categoryId === 'object' && categoryId !== null) {
       const name = categoryId.name?.toLowerCase() || '';
       return name.includes('receita') || name.includes('salário');
     }
-    
-    // Se categoryId for um número ou string
-    const category = categories.find((cat) => 
-      cat.id.toString() === categoryId.toString()
-    );
+    const category = categories.find((cat) => cat.id.toString() === categoryId.toString());
     if (!category) return false;
-    
     const name = category.name.toLowerCase();
     return name.includes('receita') || name.includes('salário');
   };
@@ -65,21 +57,16 @@ const TransactionList = ({ transactions, categories, onEdit, onDelete }) => {
           {transactions.map((transaction) => {
             const categoryColor = getCategoryColor(transaction.categoria);
             const isIncome = Number(transaction.valor) > 0;
-            
             return (
               <tr key={transaction.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(transaction.data)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {transaction.titulo}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(transaction.data)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.titulo}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span 
+                  <span
                     className="px-2 py-1 rounded-full text-xs font-semibold"
-                    style={{ 
+                    style={{
                       backgroundColor: `${categoryColor}20`,
-                      color: categoryColor
+                      color: categoryColor,
                     }}
                   >
                     {getCategoryName(transaction.categoria)}

@@ -4,7 +4,6 @@ import CategoryForm from '../components/forms/CategoryForm';
 import CategoryList from '../components/common/CategoryList';
 import ConfirmModal from '../components/common/ConfirmModal';
 import Alert from '../components/common/Alert';
-import { COLORS } from '../utils/colors';
 
 const Categorias = () => {
   const { categories, loading, error, createCategory, updateCategory, deleteCategory } = useCategories();
@@ -27,7 +26,6 @@ const Categorias = () => {
       setIsModalOpen(false);
       setSelectedCategory(null);
     } catch (error) {
-      console.error('Error submitting category:', error);
       setMessage(error.message || 'Erro ao salvar categoria');
       setSuccess(false);
     }
@@ -46,7 +44,6 @@ const Categorias = () => {
       setIsDeleteModalOpen(false);
       setSelectedCategory(null);
     } catch (error) {
-      console.error('Error deleting category:', error);
       setMessage(error.message);
       setSuccess(false);
     }
@@ -74,7 +71,6 @@ const Categorias = () => {
           Adicionar
         </button>
       </div>
-
       {message && (
         <Alert
           message={message}
@@ -82,13 +78,11 @@ const Categorias = () => {
           onClose={() => setMessage('')}
         />
       )}
-
       <CategoryList
         categories={categories}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
       />
-
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -111,7 +105,6 @@ const Categorias = () => {
           </div>
         </div>
       )}
-
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => {

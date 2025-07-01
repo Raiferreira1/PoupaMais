@@ -1,13 +1,12 @@
 "use client"
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import LoginHeader from '../components/layout/LoginHeader';
 import Input from '../components/common/Input';
 import Alert from '../components/common/Alert';
 import useLogin from '../hooks/useLogin';
 
-// Ícones para os inputs
+// Ícone de e-mail para o campo de entrada
 const EmailIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -25,6 +24,7 @@ const EmailIcon = () => (
   </svg>
 );
 
+// Ícone de cadeado para o campo de senha
 const LockIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -42,22 +42,24 @@ const LockIcon = () => (
   </svg>
 );
 
+// Componente de Login
 function Login() {
+  // Hook customizado para gerenciar estado e lógica do formulário de login
   const { formData, message, success, loading, handleChange, handleSubmit } = useLogin();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center">
       <div className="max-w-md w-full mx-auto p-6">
+        {/* Cabeçalho do login */}
         <LoginHeader
           title="PoupaMais"
           subtitle="Faça login para gerenciar suas finanças"
         />
-
         <div className="bg-white rounded-xl shadow-md p-6 mb-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Acesse sua conta</h2>
-
+          {/* Exibe mensagem de sucesso ou erro */}
           {message && <Alert message={message} type={success ? 'success' : 'error'} />}
-
+          {/* Formulário de login */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
               id="email"
@@ -69,7 +71,6 @@ function Login() {
               onChange={handleChange}
               icon={EmailIcon}
             />
-
             <Input
               id="password"
               type="password"
@@ -80,7 +81,7 @@ function Login() {
               onChange={handleChange}
               icon={LockIcon}
             />
-
+            {/* Opção de lembrar login e link para recuperação de senha */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -99,7 +100,7 @@ function Login() {
                 </a>
               </div>
             </div>
-
+            {/* Botão de envio do formulário */}
             <button
               type="submit"
               disabled={loading}
@@ -112,7 +113,7 @@ function Login() {
               {loading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
-
+          {/* Link para cadastro */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Não tem uma conta?{' '}

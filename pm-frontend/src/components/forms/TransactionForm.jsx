@@ -3,8 +3,11 @@ import useCategories from '../../hooks/useCategories';
 import { parseCurrency } from '../../utils/formatters';
 import { COLORS } from '../../utils/colors';
 
+// Formulário para criar ou editar uma transação financeira
 const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
+  // Busca categorias do contexto global (fallback)
   const { categories: categoriesData, loading: categoriesLoading } = useCategories();
+  // Estado do formulário
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -13,6 +16,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
     type: 'expense'
   });
 
+  // Preenche o formulário ao editar uma transação existente
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -25,6 +29,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
     }
   }, [initialData]);
 
+  // Atualiza os campos do formulário
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -33,10 +38,10 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
     }));
   };
 
+  // Envia o formulário para o callback do pai
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Validações
+    // Validações básicas
     if (!formData.description.trim()) {
       alert('Por favor, preencha a descrição');
       return;
@@ -53,13 +58,11 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
       alert('Por favor, selecione uma categoria');
       return;
     }
-
     // Descobre o tipo da categoria
     const selectedCategory = categories.find(cat => cat.id === parseInt(formData.category));
     const isReceita = selectedCategory && (selectedCategory.type === 'income' || selectedCategory.type === 'Receita');
     const amount = Math.abs(parseCurrency(formData.amount));
     const finalAmount = isReceita ? amount : -amount;
-
     onSubmit({
       titulo: formData.description.trim(),
       valor: finalAmount,
@@ -69,10 +72,9 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
     });
   };
 
-  // Agrupa categorias por tipo
+  // Agrupa categorias por tipo para exibir no select
   const groupedCategories = React.useMemo(() => {
     if (!categoriesData) return { income: [], expense: [] };
-
     return categoriesData.reduce((acc, category) => {
       const type = category.type === 'income' ? 'income' : 'expense';
       acc[type].push(category);
@@ -86,6 +88,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Campo descrição */}
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
           Descrição
@@ -100,7 +103,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
           placeholder="Digite a descrição"
         />
       </div>
-
+      {/* Campo valor */}
       <div>
         <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">
           Valor
@@ -118,7 +121,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
           />
         </div>
       </div>
-
+      {/* Campo data */}
       <div>
         <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
           Data
@@ -132,7 +135,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
-
+      {/* Campo categoria */}
       <div>
         <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
           Categoria
@@ -145,6 +148,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           <option value="">Selecione uma categoria</option>
+          {/* Agrupamento de categorias por tipo */}
           <optgroup label="Receitas" style={{ color: COLORS.success.DEFAULT }}>
             {groupedCategories.income.map(category => (
               <option 
@@ -169,7 +173,7 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
           </optgroup>
         </select>
       </div>
-
+      {/* Botão de envio */}
       <div className="flex justify-end space-x-4">
         <button
           type="submit"
