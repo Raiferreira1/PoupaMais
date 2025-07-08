@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useCategories from '../../hooks/useCategories';
 import { parseCurrency } from '../../utils/formatters';
 import { COLORS } from '../../utils/colors';
+import { sugerirCategoriaIA } from '../../services/categories';
 
 // Formulário para criar ou editar uma transação financeira
 const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
@@ -15,6 +16,8 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
     category: '',
     type: 'expense'
   });
+  const [categoriaSugerida, setCategoriaSugerida] = useState(null);
+  const [loadingSugestao, setLoadingSugestao] = useState(false);
 
   // Preenche o formulário ao editar uma transação existente
   useEffect(() => {
@@ -28,6 +31,26 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
       });
     }
   }, [initialData]);
+
+  // Sugere categoria ao digitar descrição
+  useEffect(() => {
+    const fetchSugestao = async () => {
+      if (formData.description.length > 2) {
+        setLoadingSugestao(true);
+        try {
+          const res = await sugerirCategoriaIA(formData.description, '');
+          setCategoriaSugerida(res);
+        } catch (e) {
+          setCategoriaSugerida(null);
+        }
+        setLoadingSugestao(false);
+      } else {
+        setCategoriaSugerida(null);
+      }
+    };
+    fetchSugestao();
+    // eslint-disable-next-line
+  }, [formData.description]);
 
   // Atualiza os campos do formulário
   const handleChange = (e) => {
@@ -58,18 +81,33 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
       alert('Por favor, selecione uma categoria');
       return;
     }
+    
+    // Validar se a categoria é um número válido
+    const categoriaId = parseInt(formData.category);
+    if (isNaN(categoriaId)) {
+      alert('Categoria inválida. Por favor, selecione uma categoria válida.');
+      return;
+    }
+    
     // Descobre o tipo da categoria
-    const selectedCategory = categories.find(cat => cat.id === parseInt(formData.category));
+    const selectedCategory = categories.find(cat => cat.id === categoriaId);
     const isReceita = selectedCategory && (selectedCategory.type === 'income' || selectedCategory.type === 'Receita');
     const amount = Math.abs(parseCurrency(formData.amount));
     const finalAmount = isReceita ? amount : -amount;
-    onSubmit({
+    
+    const transactionData = {
       titulo: formData.description.trim(),
       valor: finalAmount,
       data: formData.date,
-      categoria: parseInt(formData.category),
+      categoria_id: categoriaId,
       descricao: ''
-    });
+    };
+    
+    console.log('Dados da transação sendo enviados:', transactionData);
+    console.log('Categoria selecionada:', formData.category);
+    console.log('Categoria convertida:', categoriaId);
+    
+    onSubmit(transactionData);
   };
 
   // Agrupa categorias por tipo para exibir no select
@@ -172,6 +210,20 @@ const TransactionForm = ({ onSubmit, initialData = null, categories = [] }) => {
             ))}
           </optgroup>
         </select>
+        {/* Sugestão de categoria por IA */}
+        {loadingSugestao && <div className="text-xs text-gray-500 mt-1">Buscando sugestão...</div>}
+        {categoriaSugerida && categoriaSugerida.categoria_id && (
+          <div className="mt-2 flex items-center space-x-2">
+            <span className="text-xs text-indigo-600">Sugestão: {categoriaSugerida.categoria_sugerida}</span>
+            <button
+              type="button"
+              className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded hover:bg-indigo-200"
+              onClick={() => setFormData(prev => ({ ...prev, category: categoriaSugerida.categoria_id.toString() }))}
+            >
+              Aplicar
+            </button>
+          </div>
+        )}
       </div>
       {/* Botão de envio */}
       <div className="flex justify-end space-x-4">

@@ -6,3 +6,11 @@ const api = axios.create({
 });
 
 export default api;
+
+export async function getAnaliseGastos(periodo = '1') {
+  const url = `/api/ia/analise-gastos/?periodo=${periodo}`;
+  console.log('API: URL construída:', url);
+  const response = await api.get(url);
+  console.log('API: Resposta recebida:', response.data);
+  return response.data;
+}

@@ -3,31 +3,48 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 import { COLORS } from '../../utils/colors';
 
 const TransactionList = ({ transactions, categories, onEdit, onDelete }) => {
-  const getCategoryName = (categoryId) => {
-    if (!categoryId) return 'Sem categoria';
-    const category = categories.find(cat => cat.id === categoryId);
+  const getCategoryName = (categoria) => {
+    if (!categoria) return 'Sem categoria';
+    // Se categoria é um objeto com dados completos (do backend)
+    if (typeof categoria === 'object' && categoria !== null) {
+      return categoria.nome || 'Sem categoria';
+    }
+    // Se categoria é apenas um ID (fallback)
+    const category = categories.find(cat => cat.id === categoria);
     return category ? category.name : 'Sem categoria';
   };
 
-  const getCategoryColor = (categoryId) => {
-    if (!categoryId) return COLORS.gray.DEFAULT;
-    const category = categories.find(cat => cat.id === categoryId);
+  const getCategoryColor = (categoria) => {
+    if (!categoria) return COLORS.gray.DEFAULT;
+    // Se categoria é um objeto com dados completos (do backend)
+    if (typeof categoria === 'object' && categoria !== null) {
+      // Usar cor padrão baseada no tipo
+      return categoria.tipo === 'Receita' ? COLORS.success.DEFAULT : COLORS.danger.DEFAULT;
+    }
+    // Se categoria é apenas um ID (fallback)
+    const category = categories.find(cat => cat.id === categoria);
     return category ? category.color : COLORS.gray.DEFAULT;
   };
 
-  const getCategoryType = (categoryId) => {
-    if (!categoryId) return 'expense';
-    const category = categories.find(cat => cat.id === categoryId);
+  const getCategoryType = (categoria) => {
+    if (!categoria) return 'expense';
+    // Se categoria é um objeto com dados completos (do backend)
+    if (typeof categoria === 'object' && categoria !== null) {
+      return categoria.tipo === 'Receita' ? 'income' : 'expense';
+    }
+    // Se categoria é apenas um ID (fallback)
+    const category = categories.find(cat => cat.id === categoria);
     return category ? category.type : 'expense';
   };
 
-  const isIncomeCategory = (categoryId) => {
-    if (!categoryId) return false;
-    if (typeof categoryId === 'object' && categoryId !== null) {
-      const name = categoryId.name?.toLowerCase() || '';
-      return name.includes('receita') || name.includes('salário');
+  const isIncomeCategory = (categoria) => {
+    if (!categoria) return false;
+    // Se categoria é um objeto com dados completos (do backend)
+    if (typeof categoria === 'object' && categoria !== null) {
+      return categoria.tipo === 'Receita';
     }
-    const category = categories.find((cat) => cat.id.toString() === categoryId.toString());
+    // Se categoria é apenas um ID (fallback)
+    const category = categories.find((cat) => cat.id.toString() === categoria.toString());
     if (!category) return false;
     const name = category.name.toLowerCase();
     return name.includes('receita') || name.includes('salário');
@@ -102,15 +119,16 @@ TransactionList.propTypes = {
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      description: PropTypes.string.isRequired,
-      amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      date: PropTypes.string.isRequired,
-      category: PropTypes.oneOfType([
+      titulo: PropTypes.string.isRequired,
+      valor: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      data: PropTypes.string.isRequired,
+      categoria: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
         PropTypes.shape({
           id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-          name: PropTypes.string,
+          nome: PropTypes.string,
+          tipo: PropTypes.string,
         }),
       ]),
     })

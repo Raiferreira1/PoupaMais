@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from app_categorias.views import CategoriaViewSet
 from app_transacoes.views import TransacaoViewSet
 from rest_framework import routers
+from app_ia.views import CategoriaIASuggestionView, AnaliseGastosView
 
 router = routers.DefaultRouter()
 router.register(r'categorias', CategoriaViewSet)
@@ -19,4 +20,6 @@ urlpatterns = [
     path('', home, name='home'),  # Página inicial
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/ia/sugerir-categoria/', CategoriaIASuggestionView.as_view()),
+    path('api/ia/analise-gastos/', AnaliseGastosView.as_view()),
 ]

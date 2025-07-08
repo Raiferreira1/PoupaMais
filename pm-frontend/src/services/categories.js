@@ -1,4 +1,6 @@
 // Serviço para operações de categorias (CRUD) com o backend
+import api from './api';
+
 const API_URL = 'http://127.0.0.1:8000/api';
 
 // Gera headers de autenticação para requisições
@@ -54,7 +56,8 @@ const categoryService = {
           id: category.id,
           name: category.nome || '',
           type: isIncome ? 'income' : 'expense',
-          color: category.cor || '#000000'
+          color: category.cor || '#000000',
+          padrao: category.padrao || false
         };
       });
       
@@ -164,5 +167,10 @@ const categoryService = {
     }
   }
 };
+
+export async function sugerirCategoriaIA(titulo, descricao) {
+  const response = await api.post('/api/ia/sugerir-categoria/', { titulo, descricao });
+  return response.data;
+}
 
 export default categoryService; 

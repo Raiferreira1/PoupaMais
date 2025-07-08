@@ -12,6 +12,16 @@ const Categorias = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [filter, setFilter] = useState('all'); // 'all', 'padrao', 'custom'
+  
+  // Separar categorias por tipo
+  const categoriasPadrao = categories.filter(cat => cat.padrao);
+  const categoriasCustom = categories.filter(cat => !cat.padrao);
+  
+  // Categorias filtradas baseadas no filtro selecionado
+  const categoriasFiltradas = filter === 'all' ? categories : 
+                             filter === 'padrao' ? categoriasPadrao : 
+                             categoriasCustom;
 
   const handleSubmit = async (categoryData) => {
     try {
@@ -60,16 +70,47 @@ const Categorias = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Gerencie suas categorias de transações financeiras
+          </p>
+        </div>
         <button
           onClick={() => {
             setSelectedCategory(null);
             setIsModalOpen(true);
           }}
-          className="px-4 py-2 text-white rounded-md bg-green-500 hover:bg-green-600"
+          className="px-4 py-2 text-white rounded-md bg-green-500 hover:bg-green-600 transition-colors"
         >
-          Adicionar
+          ➕ Adicionar Categoria
         </button>
+      </div>
+      
+      {/* Informações sobre categorias padrão */}
+      <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-blue-600 text-sm">ℹ️</span>
+            </div>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-blue-800 mb-1">
+              Sobre as Categorias do Sistema
+            </h3>
+            <div className="text-sm text-blue-700 space-y-1">
+              <p>
+                <span className="font-medium">🔒 Categorias Padrão:</span> São criadas automaticamente pelo sistema e não podem ser editadas ou excluídas. 
+                Elas garantem que você sempre tenha as categorias essenciais para organizar suas finanças.
+              </p>
+              <p>
+                <span className="font-medium">✏️ Categorias Personalizadas:</span> Você pode criar, editar e excluir suas próprias categorias 
+                para personalizar ainda mais sua organização financeira.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       {message && (
         <Alert
@@ -78,8 +119,46 @@ const Categorias = () => {
           onClose={() => setMessage('')}
         />
       )}
+      
+      {/* Filtros */}
+      <div className="mb-4 flex items-center space-x-4">
+        <span className="text-sm font-medium text-gray-700">Filtrar:</span>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              filter === 'all' 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            📋 Todas ({categories.length})
+          </button>
+          <button
+            onClick={() => setFilter('padrao')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              filter === 'padrao' 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            🔒 Padrão ({categoriasPadrao.length})
+          </button>
+          <button
+            onClick={() => setFilter('custom')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              filter === 'custom' 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            ✏️ Personalizadas ({categoriasCustom.length})
+          </button>
+        </div>
+      </div>
+      
       <CategoryList
-        categories={categories}
+        categories={categoriasFiltradas}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
       />

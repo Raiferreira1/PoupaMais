@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     "app_transacoes",
     "app_categorias",
+    "app_ia",
 ]
 
 # REST Framework settings
@@ -65,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'corsheaders.middleware.CorsMiddleware',  # Middleware do CORS
+    'app_categorias.middleware.CategoriasPadraoMiddleware',  # Middleware para categorias padrão
 ]
 
 # Configuração do CORS (permitindo todos os domínios)

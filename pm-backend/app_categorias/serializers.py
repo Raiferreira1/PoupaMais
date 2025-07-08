@@ -87,6 +87,12 @@ class CategoriaSerializer(serializers.ModelSerializer):
                     f"Já existe uma categoria do tipo {tipo} com o nome '{nome}'"
                 )
         else:  # Atualização de categoria existente
+            # Verificar se é uma categoria padrão
+            if instance.padrao:
+                raise serializers.ValidationError(
+                    f"Não é possível editar a categoria '{instance.nome}' pois é uma categoria padrão do sistema."
+                )
+            
             if Categoria.objects.exclude(id=instance.id).filter(
                 nome__iexact=nome, tipo=tipo
             ).exists():
